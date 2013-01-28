@@ -1,5 +1,5 @@
 TEX := latex
-DVI2PDF := dvipdfm
+DVI2PDF := dvipdf
 MKIDX := makeindex
 PDFTEX := pdflatex
 
