@@ -10,7 +10,7 @@ IDXFILE = $(TEXFILE:.tex=.idx)
 DVIFILE = $(TEXFILE:.tex=.dvi)
 PDFFILE = $(TEXFILE:.tex=.pdf)
 
-all: $(PDFFILE)
+all: index directPDF # $(PDFFILE)
 
 
 .PHONY : $(DVIFILE)

@@ -4,15 +4,21 @@
 \makeindex
 
 % check syntax only
-\usepackage{syntonly}
+% \usepackage{syntonly}
 % \syntaxonly
 
 % hyperref setting
-\usepackage[
-        bookmarks,bookmarksnumbered,dvipdfm,
-        breaklinks,colorlinks,
-        pdfauthor={Shou Ya},pdftitle={Extended Essay},
- ]{hyperref}
+\usepackage{hyperref}
+%        bookmarks,bookmarksnumbered,dvipdfm,
+%        breaklinks,colorlinks,
+
+\hypersetup{
+        unicode,
+        bookmarks,
+        colorlinks,
+        pdfauthor={Shou Ya},
+        pdftitle={IB Extended Essay: },
+}
 
 
 % page header setting
@@ -20,6 +26,5 @@
 
 % set fit chapter name display
 \usepackage{titlesec}
-
 
 
