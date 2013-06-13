@@ -50,16 +50,16 @@ matched text. The scanner loops then, until the it meets EOF(end-of-file).
 A technical problems need to be noticed is the \emph{state}. A scanner could
 behave differently when it meets the same text under different
 state. This method is necessary to cope with complex syntax patterns.
-For example, the word \verb+if+ means differently in a direct context,
+For example, the text \verb+if+ means differently in a direct context,
 string context, or a comment context. What the context usually
-deliminators do is transfer state. (code example:
+deliminators do is transferring state. (code example:
 \libcodehrefln{scanner_rules.rb}{32}{string context},
 \libcodehrefln{scanner_rules.rb}{10}{comment context})
 
 Each token the scanner parsed produce a pair in format of $[type,
 value]$, and for the last token, EOF, it returns $[false,
-false]$. This agreement is for the syntax parser to recognize what a
-token is, and specified by racc.
+false]$. This agreement is specified by racc for the syntax parser to
+recognize what a token is.
 
 \subsection{Syntax Parser}
 % \sourceofthissectiona{lib/revo/grammar.y}
