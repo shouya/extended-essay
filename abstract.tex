@@ -1,16 +1,43 @@
 \section*{Abstract}
 
 \begin{abstract}
-The main theme of this essay was the practice of compiler theories and
-lisp functional programming study. The essay records my journal
-about how I implemented a Scheme programming language interpreter in
-Ruby\footnote{Ruby programming language, \url{http://ruby-lang.org}}.
+
+This essay is about the research and study of scheme
+programming language interpreter implementing.
+
+Functional programming paradigm is one of the most mathematically
+beautiful things I met in computer science. Scheme is one of the most
+pure programming languages. I like this two things always. Thus I
+tried to learn more about functional programming and implemented a
+scheme interpreter by myself.
+
+In this essay, I will bring up what I have done and what I have learnt
+from this project. Practically I tried two times on
+implementing this scheme interpreter. I'll separate a chapter to
+discuss how the first trials failed and the improvement brought by the
+current one.
 
 
+\begin{comment}
+At the first trial I boxed all
+data types into ruby classes, this caused a low extensibility and
+efficiency of implementing the library. That is a very basic version,
+which has the very beginning features and unhygienic macro, which is
+much simpler to implement than the hygienic one. Contrarily, the new
+one adopt the some structures from the \href{heist
+  project}{https://github.com/jcoglan/heist}, which is another
+implementation of scheme in ruby. Heist uses native ruby ones as the
+scheme's primitive types, which is what I followed in the new
+implementation.
+\end{comment}
 
-I tried to program the project with
-two times of reconstructions before the final version is done.
 
-
+The codes of the project is open-sourced under MIT license. You may get
+them from
+\hyperlink{github/shouya/revo}{https://github.com/shouya/revo},
+Firstly of all, you could see the ascii-cast of a demonstration of
+the interpreter I recorded months ago to preview what you can do in
+this interpreter.\footnote{This demonstration is just for the REPL,
+  the main interpreter is to execute source file}
 
 \end{abstract}
