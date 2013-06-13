@@ -1,0 +1,66 @@
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ee.tex"
+%%% End:
+
+
+\section{From Source Code to Syntax Tree}
+The process of forming a abstract syntax tree from source code is
+usually done by two part of works. First the source code will be
+scanned and split into small tokens with singular meaning. This part
+of job is done by an advanced string parser, which is what we called
+lexical scanner. After proceeded by a lexical scanner, or lexer for
+simple, the code will be in a number of linear tokens. Then we form these
+tokens into an abstract syntax tree. By following the syntax of a
+programming language, a source code could have its meaning. For example,
+consider the following operation code: \verb 1+1 . The lexical scanner will turn
+it into token list: an integer \verb 1 , a symbol, \verb + ,
+and another integer \verb 1 . Then the syntax parser will recognize
+the this code into an binary plus operation, it takes two integer
+\verb 1  as its operands.
+
+
+\subsection{Lexical Scanner}
+The lexical scanner is written completely by myself. Firstly LISP has
+very few types of token is quite simple so it might be not necessary to
+use a lexical scanner generator like
+lex\footnote{lex: \url{https://en.wikipedia.org/wiki/Lex_(software)}, or its
+  successor
+  \href{https://www.gnu.org/software/flex/}{lex}. The
+  ruby port of lex \href{https://rubygems.org/gems/rex}{rex}.}. I
+wish I can hold more controls on the scanner since I will implement a
+REPL\footnote{Read-evaluate-print loop, an interactive interface for
+  code executing} and it requires to communicate with the lexical
+scanner.
+
+My lexical scanner is implemented as a class. An instantiated scanner
+can scan source code from standard input, string, file, or any IO
+stream.
+
+For most basic uses, this scanner can be regarded as an enumerable
+object, so you can just specify the input and then fetch an
+array of tokens directly from
+it. (\href{\libcoderefln{scanner.rb}{154}}{usage
+  example})
+
+The principle of this lexical scanner is simple. It load the source
+code string into memory, and set the position pointer to the head of
+the string. Then it traverse the lexical rule list until it find one
+that matches the string from current position. Afterward it do action
+as specified by that rule, and move the position pointer to skip the
+matched text. It loops then until the it meets EOF(end-of-file).
+
+A technique problems need to be noticed is the state. A scanner could
+behave differently when it meets the same text under different
+state. This method is necessary to cope with complex syntax patterns.
+For example, the word \verb+if+ means differently in a direct context,
+string context, or a comment context. What the context usually
+deliminators do is transfer state. (code example:
+\libcodehrefln{scanner_rules.rb}{32}{string context},
+\libcodehrefln{scanner_rules.rb}{10}{comment context})
+
+
+
+
+
+
