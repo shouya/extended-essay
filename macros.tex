@@ -1,4 +1,9 @@
 
 \newcommand{\rfivers}{\mbox{r$^5$rs}~}
 \newcommand{\RFIVERS}{\mbox{R$^5$RS}~}
-
+\newcommand{\coderef}[1]{https://github.com/shouya/revo/blob/21e9be0c49c2b841ae6eb1580fd547a959f28c8d/#1}
+\newcommand{\coderefln}[2]{https://github.com/shouya/revo/blob/21e9be0c49c2b841ae6eb1580fd547a959f28c8d/#1\#L#2}
+\newcommand{\libcoderef}[1]{\coderef{lib/revo/#1}}
+\newcommand{\libcoderefln}[2]{\coderefln{lib/revo/#1}{#2}}
+\newcommand{\libcodehref}[2]{\href{\libcoderef{#1}}{#2}}
+\newcommand{\libcodehrefln}[3]{{\href{\libcoderefln{#1}{#2}}{#3}}}
