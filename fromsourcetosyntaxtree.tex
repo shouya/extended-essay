@@ -1,9 +1,3 @@
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "ee.tex"
-%%% End:
-
-
 \section{From Source Code to Syntax Tree}
 The process of forming a abstract syntax tree from source code is
 usually done by two part of works. First the source code will be
@@ -14,15 +8,18 @@ simple, the code will be in a number of linear tokens. Then we form these
 tokens into an abstract syntax tree. By following the syntax of a
 programming language, a source code could have its meaning. For example,
 consider the following operation code: \verb 1+1 . The lexical scanner will turn
-it into token list: an integer \verb 1 , a symbol, \verb + ,
+it into token list: an integer \verb 1 , a symbol \verb + ,
 and another integer \verb 1 . Then the syntax parser will recognize
 the this code into an binary plus operation, it takes two integer
 \verb 1  as its operands.
 
 
 \subsection{Lexical Scanner}
+% \sourceofthissectionbasic{
+
+
 The lexical scanner is written completely by myself. Firstly LISP has
-very few types of token is quite simple so it might be not necessary to
+very few types of token that is quite simple so it might be not necessary to
 use a lexical scanner generator like
 lex\footnote{lex: \url{https://en.wikipedia.org/wiki/Lex_(software)}, or its
   successor
@@ -37,7 +34,7 @@ My lexical scanner is implemented as a class. An instantiated scanner
 can scan source code from standard input, string, file, or any IO
 stream.
 
-For most basic uses, this scanner can be regarded as an enumerable
+For most basic usage, this scanner can be regarded as an enumerable
 object, so you can just specify the input and then fetch an
 array of tokens directly from
 it. (\href{\libcoderefln{scanner.rb}{154}}{usage
@@ -47,10 +44,10 @@ The principle of this lexical scanner is simple. It load the source
 code string into memory, and set the position pointer to the head of
 the string. Then it traverse the lexical rule list until it find one
 that matches the string from current position. Afterward it do action
-as specified by that rule, and move the position pointer to skip the
-matched text. It loops then until the it meets EOF(end-of-file).
+specified by that rule, and move the position pointer to skip the
+matched text. The scanner loops then, until the it meets EOF(end-of-file).
 
-A technique problems need to be noticed is the state. A scanner could
+A technical problems need to be noticed is the \emph{state}. A scanner could
 behave differently when it meets the same text under different
 state. This method is necessary to cope with complex syntax patterns.
 For example, the word \verb+if+ means differently in a direct context,
@@ -59,8 +56,51 @@ deliminators do is transfer state. (code example:
 \libcodehrefln{scanner_rules.rb}{32}{string context},
 \libcodehrefln{scanner_rules.rb}{10}{comment context})
 
+Each token the scanner parsed produce a pair in format of $[type,
+value]$, and for the last token, EOF, it returns $[false,
+false]$. This agreement is for the syntax parser to recognize what a
+token is, and specified by racc.
 
+\subsection{Syntax Parser}
+% \sourceofthissectiona{lib/revo/grammar.y}
+The syntax parser is to form an abstract syntax tree from a linear token
+composition produced by a lexical scanner. The most popular syntax
+parser is
+\href{http://dinosaur.compilertools.net/yacc/}{YACC}\footnote{YACC: Yet
+  Another Compiler Compiler}, or it's GNU successor,
+\href{https://www.gnu.org/software/bison/}{bison}. The ruby port of
+YACC is called \href{https://github.com/tenderlove/racc}{racc}. This
+is what I adopt as the parser generator for \revo.
 
+racc has a DSL(domain specific language) for the syntax rule
+file. Similar to YACC, a syntax rule can be defined in regular
+BNF(\href{https://en.wikipedia.org/wiki/Backus-Naur_form}{Backus–Naur
+  Form}). With such a powerful parser generator, all I need to do is
+specify the various reduction rules for LISP. LISP has very simple
+syntax, so the syntax specification is short as well. Mainly it
+consists just a group of rules for LISP atoms, which includes basic
+data types and identifiers, and another for the
+list syntax. An atom or a list is reduced into a LISP expression.
 
+Everything will be finally reduced to a LISP expression. Strictly, we
+don't consider a bunch of LISP expressions, or no expression, as a single
+expression to be returned by the syntax parser. In a regular scheme
+source file, it is normal to have more than two expressions. The way
+to solve this problem is the \verb+begin+ operator. The \verb+begin+
+operator in Scheme takes any number of expressions as argument,
+execute them and return the value of the last one. That part of rules
+are illustrated below(\libcodehref{grammar.y}{16}{source position}):
+\begin{verbatim}
+         main: multi_expr        { val[0] }
+             | expr              { val[0] }
+             | /* empty */       { NULL }
 
+   multi_expr: multi_expr_x      { Cons[:begin, val[0]] }
 
+ multi_expr_x: expr expr         { Cons[val[0], Cons[val[1], NULL]] }
+             | expr multi_expr_x { Cons[val[0], val[1]] }
+\end{verbatim}
+
+So far the code is formed well into a syntax tree. What I do in this
+section is like to build a body for the plain text source. The next
+step, the runtime, is a kind of magical --- to make it come alive.
