@@ -1,0 +1,92 @@
+\section{Runtime}
+The usage of runtime is to create a space for the code to
+execute. Basically a runtime provides a scope stack for the local
+variables to store, and trace the call stack for the function
+invoking.
+
+\subsection{Scope Model}
+Scopes in \revo\ is only for storing local symbols, which is generally
+known as variables. Technically, these symbols are stored in a hash
+table, and is referable with their names.
+
+\subsubsection{Free Variables}
+Usually, a scope has a parent, this is what we called 'scope nesting'.
+When the program requested a variable in a scope, it will firstly
+search its own symbol table to see if the variable is defined
+locally. If that variable is not found, it will ask its parent for
+it. It does this recursively until the variable is found, or it will
+raise a '\emph{name-not-found}' exception and interrupt the execution.
+
+A creation of a scope is done by closure evaluation. A closure is
+usually known as a lambda($\lambda$) in functional
+programming. Concisely a closure could be regarded as a composition of
+a function, which is a bunch of codes with optional parameters to accept input and
+returns a value, and a scope pointer. A lambda will reserve the
+pointer to the scope where it is created, and when it evaluates, a new
+scope will be created and its parent will be set as the one it
+reserves.
+
+So consider this code snippet:
+\begin{verbatim}
+(define my-lambda       ;; define the lambda with the name 'my-lambda'
+  (let ((x 1))          ;; start a local scope and set x to 1
+    (lambda () (x))))   ;; create a lambda that return the value of x
+(define x 2)            ;; define a global variable x, set it to 2
+
+(display (my-lambda))   ;; it shows 1 instead of 2
+\end{verbatim}
+
+Because \verb+my-lambda+ is created under the scope where \verb+x+ is
+set to \verb+1+, it will regard this as the parent to search for
+variables, no matter what scope it is evaluated at.
+
+The situation I mentioned above is the way how \revo\ deal with
+free variables. A free variable, as its name, it not bounded on any
+specified value. The concept might be a little complicated to
+understand, but I'll explain with a simple example:
+\begin{verbatim}
+(lambda (a b) (+ a b c))
+\end{verbatim}
+
+In this example, it is a anonymous lambda with two parameters \verb+a+
+and \verb+b+. When we invoke this lambda, we have to specify two
+arguments for it, let's say, \verb+1+ and \verb+2+. In this case,
+\verb+1+ will be bounded on \verb+a+, and \verb+2+ will be bounded on
+\verb+b+. For the name \verb+c+, the variable it represent is not
+designated when the lambda is invoked, so this is what we called 'free
+variable'.
+
+\subsubsection{Bounded Variable}
+I used a quick way to cope with bounded variables for lambdas. In the
+new scope created by a called lambda, I will put a group of variables
+with the name of its parameters and the value of the arguments passed
+into the symbol table of the scope. So referring its arguments in the
+body is right like referring local variables. Actually there's no
+concept of local scope in Scheme. Usually, the operator \verb+let+ to
+start a local scope is also done by lambda. In the standard template
+syntax, \verb+let+ is defined like:
+
+\begin{verbatim}
+(define-syntax let
+  (syntax-rules ()
+    ((let ((name val) ...)
+       body ...)
+     ((lambda (name ...) body ...)
+      val ...))))
+\end{verbatim}
+
+So as shown, \verb^(let ((a 41)) (+ a 1))^ is equivalent to
+\verb^((lambda (a) (+ a 1)) 41)^, which is not different from calling
+a temporary lambda.
+
+\subsection{Call Stack}
+
+
+\subsection{Template Expansion}
+
+
+
+
+
+
+

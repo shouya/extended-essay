@@ -2,3 +2,20 @@
 \newcommand{\rfivers}{\mbox{r$^5$rs}~}
 \newcommand{\RFIVERS}{\mbox{R$^5$RS}~}
 
+\newcommand{\coderef}[1]{https://github.com/shouya/revo/blob/21e9be0c49c2b841ae6eb1580fd547a959f28c8d/#1}
+\newcommand{\coderefln}[2]{https://github.com/shouya/revo/blob/21e9be0c49c2b841ae6eb1580fd547a959f28c8d/#1\#L#2}
+\newcommand{\codehref}[2]{\href{\coderef{#1}}{#2}}
+\newcommand{\codehrefln}[3]{\href{\coderefln{#1}{#2}}{#3}}
+\newcommand{\libcoderef}[1]{\coderef{lib/revo/#1}}
+\newcommand{\libcoderefln}[2]{\coderefln{lib/revo/#1}{#2}}
+\newcommand{\libcodehref}[2]{\href{\libcoderef{#1}}{#2}}
+\newcommand{\libcodehrefln}[3]{{\href{\libcoderefln{#1}{#2}}{#3}}}
+
+\newcommand{\revo}{$revo$}
+\newcommand{\fantazio}{$fantazio$}
+
+\newcommand{\unimplemented}{\framebox{1.0\width}{UNIMPLEMENTED}}
+
+\newcommand{\sourceofthissectionbasic}[1]{\framebox{\small Source code of this section: #1}\\}
+
+
