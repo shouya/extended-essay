@@ -1,0 +1,86 @@
+\documentclass{article}
+
+\title{Exteneded Essay Outline}
+\author{Shou Ya}
+
+
+\begin{document}
+\maketitle
+\vspace{3em}
+
+\textit{Title:}An Implementation of Scheme Interpreter(R$^5$RS)
+\textit{Outline}
+
+\begin{itemize}
+\item Abstract
+\item Introduction
+\item Specification
+  \begin{itemize}
+  \item Lisp specification
+  \item Scheme(R$^5$RS) specification
+  \end{itemize}
+
+\item From source codes to a syntax tree
+  \begin{itemize}
+  \item Lexical scanner(lex)
+    \begin{itemize}
+    \item[*] Independent scanner module
+    \end{itemize}
+  \item Syntax parser(with racc)
+  \end{itemize}
+
+\item Basic data types
+  \begin{itemize}
+  \item Primitive types
+    \begin{itemize}
+    \item Strings
+    \item Characters
+    \item Numbers(integer, fraction, float, complex)
+    \item Symbols(aka. Identifier)
+    \item Vectors
+    \end{itemize}
+  \item Cons
+  \item Callable objects
+    \begin {itemize}
+    \item Primitive procedures
+    \item Primitive macros
+    \item Closures(aka. Lambdas)
+    \item Currys
+    \end{itemize}
+
+  \item Dynamic closures
+  \item Promises
+  \end{itemize}
+
+\item Runtime
+  \begin{itemize}
+  \item Scope model
+    \begin{itemize}
+    \item Name searching
+    \item Handling with free variables
+    \item Handling with bound variables
+    \item Aliases support
+    \end{itemize}
+  \item User scope stack
+  \item Global scope
+  \end{itemize}
+
+\item Primitive procedures(aka. Standard library)
+  \begin{itemize}
+  \item Implements in Ruby
+  \item Implements in Scheme
+  \end{itemize}
+
+\item Specials
+  \begin{itemize}
+  \item Tail-recursion detection and optimization
+  \item Lazy-evaluation
+  \item Currying
+  \item Unhygienic macro
+  \end{itemize}
+\end{itemize}
+
+\end{document}
+
+
+
