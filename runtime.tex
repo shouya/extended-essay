@@ -80,6 +80,21 @@ So as shown, \verb^(let ((a 41)) (+ a 1))^ is equivalent to
 a temporary lambda.
 
 \subsection{Call Stack}
+Call stack is an important component of a runtime for most programming
+language interpreters/compilers. Technically, in a call stack we
+record function calls and when a function returns, it will pop the
+top, in which stores an address of where the function is called. The
+instruction pointer(suppose there is one) will jump to that address to
+continue the execution of the program.
+
+In \revo, I didn't record a call stack specifically. When a closure is
+invoked, it will directly store the bounded variables with their
+arguments passed to the closure in a new scope, then it just simply
+evaluate the body. In a imperative programming language, a call will
+usually start a completely new scope to store variables. However, in
+\revo, there is actually no pure function without a
+binding\footnote{Frankly, there is. You can define this kind of
+  functions in ruby, as primitive functions in \revo.}.
 
 
 \subsection{Template Expansion}
