@@ -17,14 +17,14 @@ locally. If that variable is not found, it will ask its parent for
 it. It does this recursively until the variable is found, or it will
 raise a '\emph{name-not-found}' exception and interrupt the execution.
 
-A creation of a scope is done by closure evaluation. A closure is
-usually known as a lambda($\lambda$) in functional
+A creation of a scope is done by function closure evaluation. A
+function closure is usually known as a lambda($\lambda$) in functional
 programming. Concisely a closure could be regarded as a composition of
-a function, which is a bunch of codes with optional parameters to accept input and
-returns a value, and a scope pointer. A lambda will reserve the
-pointer to the scope where it is created, and when it evaluates, a new
-scope will be created and its parent will be set as the one it
-reserves.
+a function, which is a bunch of codes with optional parameters to
+accept input and returns a value, and a scope pointer. A lambda will
+reserve the pointer to the scope where it is created, and when it
+evaluates, a new scope will be created and its parent will be set as
+the one it reserves.
 
 So consider this code snippet:
 \begin{verbatim}
@@ -94,10 +94,39 @@ evaluate the body. In a imperative programming language, a call will
 usually start a completely new scope to store variables. However, in
 \revo, there is actually no pure function without a
 binding\footnote{Frankly, there is. You can define this kind of
-  functions in ruby, as primitive functions in \revo.}.
+  functions in ruby, as primitive functions in \revo.}. For a closure,
+a new scope for it is stacked on the top of the scope where it is
+created, another reason that call stack is not necessarily needed is
+the functional programming specification. Typically, Scheme doesn't
+have any interrupt allowed(ignore \verb+call/cc+), that means, there
+is no \verb+break+, \verb+goto+, or even \verb+return+ statements. The
+main purpose to keep a call stack is for \verb+return+ statements to
+jump among the function stacks.
 
 
-\subsection{Template Expansion}
+\subsection{Macro: Template Expansion}
+The template system is one of my favorite features in Scheme
+programming language. A template in Scheme is usually known as a
+\emph{macro}. Macro gives lisp family ultra-magical power to form the
+code. Generally, a macro rule holds a pattern of code and a
+transformer. To process a macro, a macro matcher will firstly scan the
+code and match it with a macro rule using its specified pattern, then
+it will apply the transformation.
+
+Unlike a function, a macro take \emph{codes} rather than \emph{values}
+as its parameters. The codes passed to it will not be evaluated before
+the macro expansion. Therefore it has meta-power to control the code.
+
+Macros in Scheme is written in the syntax like below:
+\begin{verbatim}
+(define-syntax my-if (else)
+  (syntax-rules
+    ((my-if cond body ...)
+     (if cond (begin body ...) nil))
+    ((my-if cond if-part ... else else-part ...)
+     (if cond (begin if-part ...) (begin else-part ...)))))
+
+\end{verbatim}
 
 
 
