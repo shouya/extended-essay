@@ -1,5 +1,5 @@
 \section{Runtime}
-The usage of runtime is to create a space for the code to
+The usage of a runtime is to create a space for the code to
 execute. Basically a runtime provides a scope stack for the local
 variables to store, and trace the call stack for the function
 invoking.
@@ -103,7 +103,6 @@ is no \verb+break+, \verb+goto+, or even \verb+return+ statements. The
 main purpose to keep a call stack is for \verb+return+ statements to
 jump among the function stacks.
 
-
 \subsection{Macro: Template Expansion}
 The template system is one of my favorite features in Scheme
 programming language. A template in Scheme is usually known as a
@@ -117,7 +116,7 @@ Unlike a function, a macro take \emph{codes} rather than \emph{values}
 as its parameters. The codes passed to it will not be evaluated before
 the macro expansion. Therefore it has meta-power to control the code.
 
-Macros in Scheme is written in the syntax like below:
+Macros syntax in Scheme is like:
 \begin{verbatim}
 (define-syntax my-if (else)
   (syntax-rules
@@ -125,12 +124,56 @@ Macros in Scheme is written in the syntax like below:
      (if cond (begin body ...) nil))
     ((my-if cond if-part ... else else-part ...)
      (if cond (begin if-part ...) (begin else-part ...)))))
-
 \end{verbatim}
 
+So when I call it with \verb+(my-if 1 'a else 'b)+, it will
+be transformed to \verb+(if 1 (begin 'a) (begin 'b))+. This
+process will be done before the final code evaluation. My
+implementation is slightly different. Since \revo\ is an interpreter
+than a compiler, the compile-time and the run-time is combined
+together. I deal with macros as long as I deal with other callable
+objects in the run-time.
+
+The matcher and the transformer\footnote{In \revo\ it is called as a
+template.} are separate parts. When a macro is found called somewhere,
+the macro processor will invoke the bunch of matchers for that macro;
+then it will return the one that matches the pattern. The matcher scan
+pattern and relate different parts of code with the names specified in
+the macro definition. This relation table will be passed to the
+corresponding transformer, and the transformer restore the snippet of
+code with the transformation rules defined according to the
+table. Finally the snippet generate will replace the original macro
+calling, and will be evaluated as a regular code.
+
+\subsubsection{Unhygienic Macro}
+In a programming language that has unhygienic macro support, it is
+possible to poison the external binding from macro
+expansion. Unhygienic macro is a kind of black magic that you can use
+its power to construct things beyond, but if it is mishandled, its will
+cause unexpected results.
+
+Macros in Common Lisp is unhygienic. \RFIVERS\ specified that
+macros in Scheme should be hygienic. In order to give programmer more
+freedom, I added an option in \revo's implementation to support
+unhygienic macros.
+
+Unhygienic macro is relative easy to implement. All need to do is just
+substitute the names with it's
 
 
+\subsubsection{Hygienic Macro}
+\url{http://lifegoo.pluskid.org/?p=418}
+In opposite to unhygienic macros, hygienic macro has no side effect
 
+In specification document, it states:
+\begin{quote}
+If a macro transformer inserts a binding for an identifier (variable
+or keyword), the identifier will in effect be renamed throughout its
+scope to avoid conflicts with other identifiers.
+\end{quote}
+\begin{flushright}
+--\href{http://www.schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-7\.html\#\%\_sec\_4\.3}{\RFIVERS}
+\end{flushright}
 
-
+That means a
 
